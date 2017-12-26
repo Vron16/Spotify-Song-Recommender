@@ -1,0 +1,50 @@
+import org.apache.spark.sql._
+import org.apache.spark.sql.functions._
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.Row
+val bearer = "BQDqIpb1rgxx6wLXApEm0wxRN7Z1Q5yld2fKmV4T9qmVIwCD7XwCJBikPamBj6mrlVC50vhs7g24ITmObFrt-DWiZYWxiFvcvErvMynh42SjlYJ-MuKJQ5oPtuCnAph_iK_5TeM9SQsXyP1TA2y9yA1ICHgQIUFnmYs"
+
+//val playlist = spark.read.option("multiLine", true).json("/FileStore/tables/s8lj08vn1508952283347/spotifyTrackks.json")
+val parsePlaylist = spark.read.json("/FileStore/tables/SingleLineSpotifyPlaylist.json")
+parsePlaylist.show()
+parsePlaylist.printSchema()
+val flattened = parsePlaylist.select($"href",explode($"items").as("items_flat"))
+flattened.show()
+flattened.printSchema()
+case class Row
+item.show()
+/*case class Row(value: Seq[Row])
+val trackIds = flattened.explode($"items_flat") {
+ 
+  case Row(item: Seq[Row]) => item.map{ item => 
+    val added_at = item(0).asInstanceOf[String]
+    val added_by = item(1).asInstanceOf[Row]
+    val is_local = item(2).asInstanceOf[Boolean]
+    val track = item(3).asInstanceOf[Row]
+    }
+}.cache()*/
+
+/*val items = flattened.select("items_flat")
+items.show()
+items.printSchema()
+*/
+
+//val items = parsePlaylist.select("items")
+//val explodedItems = parsePlaylist.explode($"items")
+
+//items.show()
+//items.printSchema()
+
+//for (i <- 0 until items.length)
+
+/*var trks = "tracks"
+getAudioFeatureAPI(sqlContext.sql(playlist.select(trks)))
+
+def getAudioFeatureAPI(df:org.apache.spark.sql.DataFrame) = {
+  df.collect().map(row => {
+  val trackId = row.getAs[String]("id")  
+  s"""
+  curl -X GET "https://api.spotify.com/v1/audio-features/$trackId" -H "Accept: application/json" -H "Authorization: Bearer $bearer" >> audioFeatures.json
+  """ 
+}).map(println)
+}*/
